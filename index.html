@@ -22,7 +22,6 @@
 <link rel="canonical" href="">
 <meta name="twitter:title" content="Júlia Rubio · Designer Gráfica · Sorocaba, SP">
 <meta name="twitter:description" content="Designer gráfica criando identidades, experiências visuais e histórias que conectam pessoas e marcas.">
-<link rel="preload" as="image" href="assets/images/projects/p2_1.webp" fetchpriority="high">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"Person","@id":"#julia","name":"Júlia Rubio","jobTitle":"Graphic Designer","email":"juliacrubio51@gmail.com","sameAs":["https://www.instagram.com/juu_rubio/","https://www.behance.net/juliacosta55"],"knowsAbout":["Visual Identity","Branding","Social Media","Storymaker","Photography","Packaging Design"],"workLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"Sorocaba","addressRegion":"SP","addressCountry":"BR"}}},
@@ -565,9 +564,29 @@ body.sub #page{display:block}
 .p-meta span{border:1.5px solid var(--ink);border-radius:999px;padding:6px 11px}
 .caption{white-space:pre-wrap;font-size:18px;line-height:1.55;max-width:600px}
 .caption a{text-decoration:none;border-bottom:1px solid rgba(20,20,20,.35)}
-.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-bottom:40px}
-.gal>*{width:100%;border-radius:10px;background:#ECEAE4;display:block}
-.gal>*:first-child{grid-column:1/-1}.gal.two>*:first-child{grid-column:auto}
+
+/* ---------- PROJECT DETAIL GALLERY (HARMONIOUS & RESPONSIVE) ---------- */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(18px,2.8vw,32px);padding-bottom:60px;max-width:1160px;margin-inline:auto;align-items:center}
+.gal>img,.gal>video{display:block;width:auto;height:auto;max-width:100%;max-height:min(74vh,680px);object-fit:contain;border-radius:10px;background:#ECEAE4;margin-inline:auto;justify-self:center}
+.gal>*:first-child{grid-column:1/-1}
+.gal.two>*:first-child{grid-column:auto}
+.gal .lap{grid-column:1/-1;width:min(940px,100%);margin:20px auto 30px}
+.gal>img.is-wide,.gal>video.is-wide{grid-column:1/-1;width:auto;max-width:100%;max-height:min(74vh,680px)}
+.gal>img.is-portrait,.gal>video.is-portrait{max-width:min(500px,100%);max-height:min(76vh,700px)}
+.gal>*:first-child.is-portrait{max-width:min(540px,100%);max-height:min(76vh,700px)}
+.gal>*:last-child:nth-child(2n){grid-column:1/-1;max-width:min(680px,100%);margin-inline:auto}
+
+@media (max-width:980px){
+  .gal{max-width:100%;gap:20px;padding-bottom:50px}
+  .gal>img,.gal>video{max-height:min(68vh,560px)}
+  .gal>img.is-portrait,.gal>video.is-portrait{max-width:min(440px,100%);max-height:min(70vh,580px)}
+}
+
+@media (max-width:768px){
+  .gal{grid-template-columns:1fr;gap:16px;padding-bottom:40px}
+  .gal>img,.gal>video{max-height:min(62vh,440px);border-radius:8px}
+  .gal>img.is-portrait,.gal>video.is-portrait,.gal>*:first-child.is-portrait{max-width:100%;max-height:min(66vh,460px)}
+}
 .next-p{display:block;text-decoration:none;border-top:1.5px solid var(--ink);padding:40px 0 120px}
 .next-p h2{font-size:clamp(54px,8vw,130px);transition:letter-spacing .4s}
 .next-p:hover h2{letter-spacing:-.04em}
@@ -608,7 +627,7 @@ body.sub #page{display:block}
   
 }
 @media (max-width:560px){
-  .grid,.gal{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
   .links .pill.dark{display:none}
   .hero h1{font-size:15vw}
 }
@@ -1624,14 +1643,45 @@ function linkify(s) {
   return esc(s).replace(/@([A-Za-z0-9_.]*[A-Za-z0-9_])/g, (m, h) => `<a href="https://www.instagram.com/${h}/" target="_blank" rel="noopener">@${h}</a>`);
 }
 
+window.classifyGalleryItem = function(el) {
+  if (!el) return;
+  const w = el.naturalWidth || el.videoWidth;
+  const h = el.naturalHeight || el.videoHeight;
+  if (!w || !h) return;
+  const ratio = w / h;
+  if (ratio < 0.85) {
+    el.classList.add("is-portrait");
+    el.classList.remove("is-wide", "is-standard");
+  } else if (ratio >= 2.05) {
+    el.classList.add("is-wide");
+    el.classList.remove("is-portrait", "is-standard");
+  } else {
+    el.classList.add("is-standard");
+    el.classList.remove("is-portrait", "is-wide");
+  }
+};
+
+function classifyGalleryMedia() {
+  const items = $$("#page .gal img, #page .gal video, #page .pgal img, #page .pgal video");
+  items.forEach(el => {
+    if (el.tagName === "VIDEO") {
+      if (el.readyState >= 1) window.classifyGalleryItem(el);
+      else el.addEventListener("loadedmetadata", () => window.classifyGalleryItem(el), { once: true });
+    } else {
+      if (el.complete && el.naturalWidth) window.classifyGalleryItem(el);
+      else el.addEventListener("load", () => window.classifyGalleryItem(el), { once: true });
+    }
+  });
+}
+
 function mediaEl(p, [ty, f, x], k) {
   if (ty === "w") return `<div class="lap"><div class="scr"><img src="${f}" alt="${esc(p.name)} website" style="--sc:-${x}%" onerror="this.onerror=null;this.src=PLACEHOLDER_IMG"></div><div class="base"></div><p class="mono lap-c">${T[lang].lapc}</p></div>`;
   if (ty === "v") {
     const videoSrc = f.endsWith(".mp4") ? f : (f.includes("http") ? f : `${f}.mp4#t=0.1`);
     const posterSrc = x || (f.includes("http") ? "" : `${f}.webp`);
-    return `<video src="${videoSrc}" poster="${posterSrc}" muted loop playsinline autoplay preload="metadata"></video>`;
+    return `<video src="${videoSrc}" poster="${posterSrc}" muted loop playsinline autoplay preload="metadata" onloadedmetadata="classifyGalleryItem(this)"></video>`;
   }
-  return `<img loading="${k < 3 ? "eager" : "lazy"}" src="${f}" alt="${esc(p.name)} — ${esc(place(p))}" onerror="this.onerror=null;this.src=PLACEHOLDER_IMG">`;
+  return `<img loading="${k < 3 ? "eager" : "lazy"}" src="${f}" alt="${esc(p.name)} — ${esc(place(p))}" onload="classifyGalleryItem(this)" onerror="this.onerror=null;this.src=PLACEHOLDER_IMG">`;
 }
 
 function procText(p) {
@@ -1695,6 +1745,7 @@ function renderProject(p) {
     ${PROC[p.slug] ? procLayout(p) : `<div class="gal${p.media.length === 2 ? " two" : ""}">${p.media.map((m, k) => mediaEl(p, m, k)).join("")}</div>`}
     <a class="next-p" href="#${nx.slug}"><p class="mono">${t.next} →</p><h2>${esc(nx.name)}</h2></a>
   </div>`;
+  classifyGalleryMedia();
 }
 
 function route() {
