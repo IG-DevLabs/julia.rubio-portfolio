@@ -558,8 +558,10 @@ body.sub #page{display:block}
 .page-head{padding:70px 0 50px}
 .page-head h1{font-size:clamp(64px,11vw,180px)}
 .back{display:inline-flex;margin-bottom:40px}
-.p-top{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start;padding:40px 0 60px}
+.p-top{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:end;padding:40px 0 60px}
 .p-top h1{font-size:clamp(60px,9vw,150px)}
+.p-top-left{display:flex;flex-direction:column}
+.p-top-right{padding-bottom:8px}
 .p-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
 .p-meta span{border:1.5px solid var(--ink);border-radius:999px;padding:6px 11px}
 .caption{white-space:pre-wrap;font-size:18px;line-height:1.55;max-width:600px}
@@ -615,6 +617,7 @@ body.sub #page{display:block}
   .logo-big{margin-top:48px}
   .links a.navl{display:none}
   .about,.c-grid,.duo,.p-top{grid-template-columns:1fr}
+  .p-top-right{padding-bottom:0;margin-top:10px}
   .beyond .in{grid-template-columns:1fr;gap:16px}
   .grid{grid-template-columns:1fr 1fr}
   .acc-wrap{grid-template-columns:1fr}
@@ -1731,16 +1734,17 @@ function renderProject(p) {
   const t = T[lang];
   const i = PROJECTS.indexOf(p);
   const nx = PROJECTS[(i + 1) % PROJECTS.length];
+  const caption = (lang === "pt" ? p.caption_pt : p.caption_en) || p.caption_pt || p.caption_en || p.caption || "";
   $("#page").innerHTML = `<div class="wrap">
     <div class="p-top">
-      <div>
+      <div class="p-top-left">
         <a class="pill mono back" href="#featured">${t.allwork}</a>
-        <p class="mono">${esc(place(p))} — ${p.year}</p>
+        <p class="mono" style="margin-top:auto;padding-top:40px">${esc(place(p))} — ${p.year}</p>
         <h1 style="margin-top:16px">${esc(p.name)}</h1>
         <div class="p-meta mono">${p.tags.map(c => `<span>${t.cats[c] || c}</span>`).join("")}</div>
         ${p.web ? `<a class="pill dark mono webcta" href="${p.web}" target="_blank" rel="noopener">${t.visit}</a>` : ""}
       </div>
-      <div class="caption">${linkify(p.caption)}</div>
+      <div class="caption p-top-right">${linkify(caption)}</div>
     </div>
     ${PROC[p.slug] ? procLayout(p) : `<div class="gal${p.media.length === 2 ? " two" : ""}">${p.media.map((m, k) => mediaEl(p, m, k)).join("")}</div>`}
     <a class="next-p" href="#${nx.slug}"><p class="mono">${t.next} →</p><h2>${esc(nx.name)}</h2></a>
