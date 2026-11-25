@@ -18,9 +18,18 @@ function cleanSupabaseUrl(rawUrl) {
   return clean;
 }
 
+// =====================================================================
+// 1. CONFIGURAÇÃO PÚBLICA PADRÃO (PRODUÇÃO / GITHUB PAGES)
+// A URL e a Publishable Key (Anon Key) pública do Supabase ficam aqui.
+// Esta chave é 100% segura para ficar pública no frontend porque os dados
+// são protegidos pelo Row Level Security (RLS) do PostgreSQL (leitura apenas de projetos publicados).
+// =====================================================================
+const DEFAULT_SUPABASE_URL = "https://fzqkheffrxywxqjevpql.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_IT3qBQA4RmtEhw7XfO98ow_g6CB-0C6";
+
 const SUPABASE_CONFIG = {
-  url: cleanSupabaseUrl(localStorage.getItem("jr_supabase_url") || "https://fzqkheffrxywxqjevpql.supabase.co"),
-  anonKey: (localStorage.getItem("jr_supabase_anon_key") || "").trim()
+  url: cleanSupabaseUrl(localStorage.getItem("jr_supabase_url") || DEFAULT_SUPABASE_URL),
+  anonKey: (localStorage.getItem("jr_supabase_anon_key") || DEFAULT_SUPABASE_ANON_KEY).trim()
 };
 
 /**
