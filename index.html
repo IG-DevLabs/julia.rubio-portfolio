@@ -75,7 +75,7 @@ nav{display:flex;align-items:center;justify-content:space-between;height:72px;ga
 .links{display:flex;gap:26px;align-items:center}
 .links a{text-decoration:none}
 .links a.navl:hover,.links a.navl.cur{text-decoration:underline;text-underline-offset:4px}
-.pill{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--ink);border-radius:999px;padding:9px 16px;text-decoration:none;transition:background .2s,color .2s;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--ink);border-radius:999px;padding:7px 14px;text-decoration:none;transition:background .2s,color .2s;white-space:nowrap;font-size:12px}
 .pill.dark{background:var(--ink);color:var(--cream)}
 .pill:hover{background:var(--ink);color:var(--cream)}
 .pill.dark:hover{background:transparent;color:var(--ink)}
@@ -263,7 +263,7 @@ section{padding:120px 0}
 .proj .meta.sub{padding-top:5px;color:var(--mute)}
 .proj.hide{display:none}
 .see-all{display:flex;justify-content:center;margin-top:56px}
-.see-all .pill{padding:16px 26px;font-size:13px}
+.see-all .pill{padding:10px 20px;font-size:12px}
 
 /* FEATURED — option A: index list + cursor preview */
 .brands-stat{display:grid;justify-items:end;gap:6px;text-align:right}
@@ -558,13 +558,14 @@ body.sub #page{display:block}
 .page-head{padding:70px 0 50px}
 .page-head h1{font-size:clamp(64px,11vw,180px)}
 .back{display:inline-flex;margin-bottom:40px}
-.p-top{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:end;padding:40px 0 60px}
-.p-top h1{font-size:clamp(60px,9vw,150px)}
+.p-top{display:flex;flex-direction:column;gap:32px;padding:40px 0 60px;align-items:flex-start;align-self:flex-start;max-width:100%}
+.p-top h1{font-size:clamp(42px,7vw,110px);line-height:1.1}
 .p-top-left{display:flex;flex-direction:column}
 .p-top-right{padding-bottom:8px}
+.p-top .back,.p-top .small-pill{max-width:fit-content}
 .p-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
 .p-meta span{border:1.5px solid var(--ink);border-radius:999px;padding:6px 11px}
-.caption{white-space:pre-wrap;font-size:18px;line-height:1.55;max-width:600px}
+.caption{white-space:pre-wrap;font-size:18px;line-height:1.55;max-width:100%}
 .caption a{text-decoration:none;border-bottom:1px solid rgba(20,20,20,.35)}
 
 /* ---------- PROJECT DETAIL GALLERY (HARMONIOUS & RESPONSIVE) ---------- */
@@ -616,8 +617,7 @@ body.sub #page{display:block}
   .bignav small{text-align:right;font-size:10px}
   .logo-big{margin-top:48px}
   .links a.navl{display:none}
-  .about,.c-grid,.duo,.p-top{grid-template-columns:1fr}
-  .p-top-right{padding-bottom:0;margin-top:10px}
+  .about,.c-grid,.duo{grid-template-columns:1fr}
   .beyond .in{grid-template-columns:1fr;gap:16px}
   .grid{grid-template-columns:1fr 1fr}
   .acc-wrap{grid-template-columns:1fr}
@@ -640,8 +640,9 @@ body.sub #page{display:block}
 .logo { font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); text-decoration: none; line-height: 1; display: inline-block; }
 .logo:hover { color: var(--blue); }
 .minilogo { font-size: 16px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
-.pill.dark { background: var(--blue); color: #fff; border-color: var(--blue); }
+.pill.dark { background: var(--blue); color: #fff; border-color: var(--blue); font-size: 12px; }
 .pill.dark:hover { background: transparent; color: var(--blue); border-color: var(--blue); }
+.small-pill { padding: 5px 10px !important; font-size: 11px !important; }
 .floatbar.onhero .fwish { background: #fff; color: var(--ink); border-color: #fff; }
 .floatbar.onhero .fwish:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
 .wheel li.on { color: var(--blue) !important; font-weight: 600; }
@@ -1737,14 +1738,12 @@ function renderProject(p) {
   const caption = (lang === "pt" ? p.caption_pt : p.caption_en) || p.caption_pt || p.caption_en || p.caption || "";
   $("#page").innerHTML = `<div class="wrap">
     <div class="p-top">
-      <div class="p-top-left">
-        <a class="pill mono back" href="#featured">${t.allwork}</a>
-        <p class="mono" style="margin-top:auto;padding-top:40px">${esc(place(p))} — ${p.year}</p>
-        <h1 style="margin-top:16px">${esc(p.name)}</h1>
-        <div class="p-meta mono">${p.tags.map(c => `<span>${t.cats[c] || c}</span>`).join("")}</div>
-        ${p.web ? `<a class="pill dark mono webcta" href="${p.web}" target="_blank" rel="noopener">${t.visit}</a>` : ""}
-      </div>
-      <div class="caption p-top-right">${linkify(caption)}</div>
+      <a class="pill mono back small-pill" href="#featured">${t.allwork}</a>
+      <p class="mono" style="margin-top:8px">${esc(place(p))} — ${p.year}</p>
+      <h1 style="font-size:clamp(36px,6.5vw,95px)">${esc(p.name)}</h1>
+      <div class="p-meta mono">${p.tags.map(c => `<span>${t.cats[c] || c}</span>`).join("")}</div>
+      ${p.web ? `<a class="pill dark mono webcta small-pill" href="${p.web}" target="_blank" rel="noopener">${t.visit}</a>` : ""}
+      ${caption ? `<div class="caption" style="margin-top:24px">${linkify(caption)}</div>` : ""}
     </div>
     ${PROC[p.slug] ? procLayout(p) : `<div class="gal${p.media.length === 2 ? " two" : ""}">${p.media.map((m, k) => mediaEl(p, m, k)).join("")}</div>`}
     <a class="next-p" href="#${nx.slug}"><p class="mono">${t.next} →</p><h2>${esc(nx.name)}</h2></a>
