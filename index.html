@@ -584,21 +584,20 @@ body.sub #page{display:block}
 .caption{white-space:pre-wrap;font-size:17px;line-height:1.6;max-width:720px;color:rgba(20,20,20,0.85)}
 .caption a{text-decoration:none;border-bottom:1px solid rgba(20,20,20,.35)}
 
-/* ---------- PROJECT DETAIL GALLERY (UNIFORM 2-COLUMN PORTRAIT GRID) ----------
-   Even 3/4 cells in two columns: no lonely/narrow column, consistent rhythm.
-   Wide media and website laps span both columns. */
-.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,24px);padding-bottom:60px;max-width:1100px;margin-inline:auto}
-.gal>img,.gal>video{display:block;width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;object-position:center;border-radius:12px;background:#ECEAE4}
-.gal>img.is-wide,.gal>video.is-wide{grid-column:1/-1;aspect-ratio:16/9;max-height:min(60vh,540px)}
-.gal .lap{grid-column:1/-1;width:min(940px,100%);margin:20px auto 30px}
+/* ---------- PROJECT DETAIL GALLERY (MASONRY, natural aspect ratios) ----------
+   CSS multi-column masonry: every image keeps its original format — no
+   forced aspect ratios, no crops. Portrait and landscape arts flow
+   together with no gaps. Fully responsive: 1 column on mobile. */
+.gal{columns:2;column-gap:clamp(14px,2vw,24px);padding-bottom:60px;max-width:1100px;margin-inline:auto}
+.gal>img,.gal>video{display:block;width:100%;height:auto;border-radius:12px;background:#ECEAE4;margin:0 0 clamp(14px,2vw,24px);break-inside:avoid}
+.gal .lap{width:100%;margin:20px 0 30px;break-inside:avoid}
 
 /* Gallery page portrait groups (PROC projects) */
 .pgal .portrait-group{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;grid-column:1/-1}
-.pgal .portrait-group img,.pgal .portrait-group video{aspect-ratio:3/4;height:auto;object-fit:cover}
+.pgal .portrait-group img,.pgal .portrait-group video{height:auto;object-fit:contain}
 
 @media (max-width:768px){
-  .gal{grid-template-columns:1fr;gap:14px;padding-bottom:44px}
-  .gal>img,.gal>video{aspect-ratio:3/4}
+  .gal{columns:1;column-gap:0;padding-bottom:44px}
 }
 .next-p{display:block;text-decoration:none;border-top:1.5px solid var(--ink);padding:40px 0 120px}
 .next-p h2{font-size:clamp(54px,8vw,130px);transition:letter-spacing .4s}
