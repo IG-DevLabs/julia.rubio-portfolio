@@ -379,7 +379,7 @@ body.sub .switch{display:none}
   .row-v img,.row-v video{aspect-ratio:4/5}
   .row-v img.is-portrait,.row-v video.is-portrait{aspect-ratio:3/4}
 }
-.webcta{margin-top:26px}
+.webcta{margin-top:6px}
 .team{padding-bottom:40px}
 .team h1.big{margin-top:10px}.team .big b{font-weight:800}
 .how-cta{display:block;margin-top:46px;background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:28px;padding:42px 48px 46px;text-decoration:none;transition:background .35s,color .35s}
@@ -574,39 +574,31 @@ body.sub #page{display:block}
 .page-head{padding:70px 0 50px}
 .page-head h1{font-size:clamp(64px,11vw,180px)}
 .back{display:inline-flex;margin-bottom:40px}
-.p-top{display:flex;flex-direction:column;gap:32px;padding:40px 0 60px;align-items:flex-start;align-self:flex-start;max-width:100%}
-.p-top h1{font-size:clamp(42px,7vw,110px);line-height:1.1}
-.p-top-left{display:flex;flex-direction:column}
+.p-top{display:flex;flex-direction:column;gap:12px;padding:32px 0 12px;align-items:flex-start;max-width:100%}
+.p-top h1{font-size:clamp(38px,6vw,84px);line-height:1.05;margin-top:0}
+.p-top-left{display:flex;flex-direction:column;gap:6px}
 .p-top-right{padding-bottom:8px}
 .p-top .back,.p-top .small-pill{max-width:fit-content}
-.p-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
-.p-meta span{border:1.5px solid var(--ink);border-radius:999px;padding:6px 11px}
-.caption{white-space:pre-wrap;font-size:18px;line-height:1.55;max-width:100%}
+.p-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:0}
+.p-meta span{border:1.2px solid var(--ink);border-radius:999px;padding:5px 12px;font-size:11px;letter-spacing:0.02em}
+.caption{white-space:pre-wrap;font-size:17px;line-height:1.6;max-width:720px;color:rgba(20,20,20,0.85)}
 .caption a{text-decoration:none;border-bottom:1px solid rgba(20,20,20,.35)}
 
-/* ---------- PROJECT DETAIL GALLERY (RESPONSIVE GRID) ---------- */
-.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(16px,2.5vw,28px);padding-bottom:60px;max-width:1200px;margin-inline:auto}
-.gal>img,.gal>video{display:block;width:100%;height:auto;object-fit:cover;border-radius:10px;background:#ECEAE4}
-.gal>*:first-child{grid-column:1/-1;max-height:min(70vh,600px)}
-.gal.two>*:first-child{grid-column:auto}
+/* ---------- PROJECT DETAIL GALLERY (UNIFORM 2-COLUMN PORTRAIT GRID) ----------
+   Even 3/4 cells in two columns: no lonely/narrow column, consistent rhythm.
+   Wide media and website laps span both columns. */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,24px);padding-bottom:60px;max-width:1100px;margin-inline:auto}
+.gal>img,.gal>video{display:block;width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;object-position:center;border-radius:12px;background:#ECEAE4}
+.gal>img.is-wide,.gal>video.is-wide{grid-column:1/-1;aspect-ratio:16/9;max-height:min(60vh,540px)}
 .gal .lap{grid-column:1/-1;width:min(940px,100%);margin:20px auto 30px}
-.gal>img.is-wide,.gal>video.is-wide{grid-column:1/-1;max-height:min(60vh,520px)}
 
-/* Portrait group layout: pair portraits together or stack them */
-.gal .portrait-group{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;grid-column:span 2}
-.gal .portrait-group:is(.gal>img,.gal>video).is-portrait{grid-column:auto;aspect-ratio:3/4;max-height:45vh;object-fit:cover}
-.gal .portrait-group .is-portrait:first-child{max-height:100%}
-
-/* Gallery page portrait groups */
+/* Gallery page portrait groups (PROC projects) */
 .pgal .portrait-group{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;grid-column:1/-1}
 .pgal .portrait-group img,.pgal .portrait-group video{aspect-ratio:3/4;height:auto;object-fit:cover}
 
-@media (max-width:980px){
-  .gal{grid-template-columns:1fr;gap:20px;padding-bottom:50px}
-  .gal>*:first-child{max-height:min(60vh,480px)}
-  .gal>img.is-wide,.gal>video.is-wide{max-height:min(50vh,420px)}
-  .gal .portrait-group{grid-column:1/-1}
-  .gal .portrait-group .is-portrait{max-height:45vh}
+@media (max-width:768px){
+  .gal{grid-template-columns:1fr;gap:14px;padding-bottom:44px}
+  .gal>img,.gal>video{aspect-ratio:3/4}
 }
 .next-p{display:block;text-decoration:none;border-top:1.5px solid var(--ink);padding:40px 0 120px}
 .next-p h2{font-size:clamp(54px,8vw,130px);transition:letter-spacing .4s}
@@ -1790,14 +1782,16 @@ function renderProject(p) {
   const caption = (lang === "pt" ? p.caption_pt : p.caption_en) || p.caption_pt || p.caption_en || p.caption || "";
   $("#page").innerHTML = `<div class="wrap">
     <div class="p-top">
-      <a class="pill mono back small-pill" href="#featured">${t.allwork}</a>
-      <p class="mono" style="margin-top:8px">${esc(place(p))} — ${p.year}</p>
-      <h1 style="font-size:clamp(36px,6.5vw,95px)">${esc(p.name)}</h1>
-      <div class="p-meta mono">${p.tags.map(c => `<span>${t.cats[c] || c}</span>`).join("")}</div>
+      <div class="p-top-left">
+        <a class="pill mono back small-pill" href="#featured">${t.allwork}</a>
+        <p class="mono" style="margin-top:12px;opacity:0.6">${esc(place(p))} — ${p.year}</p>
+        <h1>${esc(p.name)}</h1>
+        <div class="p-meta mono">${p.tags.map(c => `<span>${t.cats[c] || c}</span>`).join("")}</div>
+      </div>
       ${p.web ? `<a class="pill dark mono webcta small-pill" href="${p.web}" target="_blank" rel="noopener">${t.visit}</a>` : ""}
-      ${caption ? `<div class="caption" style="margin-top:24px">${linkify(caption)}</div>` : ""}
+      ${caption ? `<div class="caption">${linkify(caption)}</div>` : ""}
     </div>
-    ${PROC[p.slug] ? procLayout(p) : `<div class="gal${p.media.length === 2 ? " two" : ""}">${p.media.map((m, k) => mediaEl(p, m, k)).join("")}</div>`}
+    ${PROC[p.slug] ? procLayout(p) : `<div class="gal">${p.media.map((m, k) => mediaEl(p, m, k)).join("")}</div>`}
     <a class="next-p" href="#${nx.slug}"><p class="mono">${t.next} →</p><h2>${esc(nx.name)}</h2></a>
   </div>`;
   classifyGalleryMedia();
